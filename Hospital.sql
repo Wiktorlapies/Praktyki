@@ -5,41 +5,48 @@ GO
 
 CREATE TABLE dbo.Specializations (
 	ID INT IDENTITY(1,1) NOT NULL,
-	SpecName VARCHAR(25) NOT NULL,
+	Name VARCHAR(25) NOT NULL,
 	CONSTRAINT PK_Specialization PRIMARY KEY(ID)
 );
 
+
 CREATE TABLE dbo.Deseases (
 	ID INT IDENTITY(1,1) NOT NULL,
-	DesName VARCHAR(35) NOT NULL,
+	Name VARCHAR(35) NOT NULL,
 	CONSTRAINT PK_Deseases PRIMARY KEY(ID)
 );
 
 CREATE TABLE dbo.Medicines (
 	ID INT IDENTITY(1,1) NOT NULL,
-	MedName VARCHAR(40) NOT NULL,
+	Name VARCHAR(40) NOT NULL,
 	CONSTRAINT PK_Medicines PRIMARY KEY(ID)
 );
 
 CREATE TABLE dbo.Doctors (
 	ID INT IDENTITY(1,1) NOT NULL,
-	FirstName CHAR NOT NULL,
-	LastName CHAR NOT NULL,
-	SpecID INT NULL,
+	FirstName VARCHAR(35) NOT NULL,
+	LastName VARCHAR(35) NOT NULL,
+	SpecializationID INT NULL,
 	CONSTRAINT PK_Doctors PRIMARY KEY(ID),
-	CONSTRAINT FK_DoctorSpecialization FOREIGN KEY (SpecID) REFERENCES dbo.Specializations(ID)
+	CONSTRAINT FK_DoctorSpecialization FOREIGN KEY (SpecializationID) REFERENCES dbo.Specializations(ID)
 );
 
 CREATE TABLE dbo.Patients (
 	ID INT IDENTITY(1,1) NOT NULL,
-	FirstName CHAR NOT NULL,
-	LastName CHAR NOT NULL,
+	FirstName VARCHAR(35) NOT NULL,
+	LastName VARCHAR(35) NOT NULL,
 	Age TINYINT NOT NULL,
 	DeseaseID INT NULL,
 	PESEL BIGINT NULL,
 	CONSTRAINT PK_Patients PRIMARY KEY(ID),
 	CONSTRAINT FK_PatientDesease FOREIGN KEY (DeseaseID) REFERENCES dbo.Deseases(ID)
 );
+
+ALTER TABLE dbo.Patients ADD 
+	Gender VARCHAR(1) NOT NULL CHECK(Gender='F' OR Gender='M'),
+	Mature VARCHAR(1) NOT NULL CHECK(Mature='Y' OR Mature='N'),
+	SecondName VARCHAR(35) NULL
+
 
 CREATE TABLE dbo.Prescriptions (
 	ID INT IDENTITY(1,1) NOT NULL,
@@ -54,3 +61,4 @@ CREATE TABLE dbo.Prescriptions (
 	CONSTRAINT FK_PrescriptionMedicine FOREIGN KEY (MedicineID) REFERENCES dbo.Medicines(ID),
 	CONSTRAINT FK_PrescriptionDoctor FOREIGN KEY (DoctorID) REFERENCES dbo.Doctors(ID)
 );
+
