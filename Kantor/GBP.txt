@@ -1,0 +1,4 @@
+Data transakcji: 2025-03-19 16:19 
+Ilosc zakupionej waluty: 1500.00 GBP 
+Cena(PLN): 7950.00 
+
