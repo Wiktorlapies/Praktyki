@@ -39,11 +39,11 @@ else:
         
         ilosc = float(input("W jakiej ilości?:"))
         if zasoby[waluta] < ilosc:
-            print(f'Za malo zasobow {waluta} w kantorze, dostepnych jest {zasoby[waluta]} {waluta}')
+            print(f'Za malo zasobow {waluta} w kantorze, dostepnych jest {zasoby[waluta]:.2f} {waluta}')
         else:
             
             budzet = float(input("Podaj jakim budzetem dysponujesz(PLN):"))
-            cena = round((ilosc * waluty_na_PLN[waluta])) 
+            cena = round((ilosc * waluty_na_PLN[waluta]), 2) 
             if budzet < cena:
                 print(f'Masz za malo pieniedzy by kupic {(ilosc):.2f} {waluta}')
             else:
