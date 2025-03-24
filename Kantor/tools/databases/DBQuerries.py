@@ -1,11 +1,11 @@
-Drop_Tables = """
+SQL_Drop_Tables = """
     DROP TABLE dbo.Transactions
     DROP TABLE dbo.Resources
     DROP TABLE dbo.ExchangeRates
     DROP TABLE dbo.Currencies
 """
 
-Create_Table_Currencies = """
+SQL_Create_Table_Currencies = """
     CREATE TABLE dbo.Currencies(
         ID INT IDENTITY(1,1) NOT NULL,
         Name VARCHAR(10) NOT NULL,
@@ -13,7 +13,7 @@ Create_Table_Currencies = """
     );
 """
 
-Create_Table_ExchangeRates = """
+SQL_Create_Table_ExchangeRates = """
     CREATE TABLE dbo.ExchangeRates(
         ID INT IDENTITY(1,1) NOT NULL,
         CurrencyID INT NOT NULL,
@@ -23,7 +23,7 @@ Create_Table_ExchangeRates = """
     );
 """
 
-Create_Table_Resources = """
+SQL_Create_Table_Resources = """
     CREATE TABLE dbo.Resources(
         ID INT IDENTITY(1,1) NOT NULL,
         CurrencyID INT NOT NULL,
@@ -33,7 +33,7 @@ Create_Table_Resources = """
     );
 """
 
-Create_Table_Transactions = """
+SQL_Create_Table_Transactions = """
     CREATE TABLE dbo.Transactions(
         ID INT IDENTITY(1,1) NOT NULL,
         CurrencyID INT NOT NULL,
@@ -45,46 +45,58 @@ Create_Table_Transactions = """
     );
 """
 
-Rows_in_Currencies = """
+SQL_Rows_in_Currencies = """
     INSERT INTO dbo.Currencies (Name) VALUES
         (?)
 """
 
-Rows_in_ExchangeRates = """
+SQL_Rows_in_ExchangeRates = """
     INSERT INTO dbo.ExchangeRates (CurrencyID, ExchangeRate) VALUES
         (?, ?)
 """
 
-Rows_in_Resources = """
+SQL_Rows_in_Resources = """
     INSERT INTO dbo.Resources (CurrencyID, Quantity) VALUES
         (?, ?)
 """
 
-Get_CurrencyID = """
+SQL_Get_CurrencyID = """
     SELECT ID 
     FROM Currencies
     WHERE Name = ?
 """
 
-Get_Quantity = """
+SQL_Get_Resource = """
     SELECT r.Quantity, r.ID
     FROM Resources r JOIN Currencies c ON r.CurrencyID = c.ID
     WHERE c.Name = ?
 """
 
-Get_ExchangeRate = """
+SQL_Get_ExchangeRate = """
     SELECT er.ExchangeRate, c.ID
     FROM ExchangeRates er JOIN Currencies c ON er.CurrencyID = c.ID
     WHERE c.Name = ?
 """
 
-Update_Resources = """
+SQL_Update_Resources = """
     UPDATE dbo.Resources
     SET Quantity=?
     WHERE ID=?
 """
 
-Add_Transaction = """
+SQL_Add_Transaction = """
     INSERT INTO dbo.Transactions (CurrencyID, Quantity, Cost) VALUES
         (?,?,?)
+"""
+
+SQL_Get_Currencies = """
+    SELECT c.Name 
+    FROM Currencies c INNER JOIN Resources r ON c.ID = r.CurrencyID
+    WHERE r.Quantity > 0
+"""
+
+SQL_Get_Resource_Quantity = """
+    SELECT r.Quantity
+    FROM Currencies c INNER JOIN Resources r ON c.ID = r.CurrencyID
+    WHERE c.Name = ?
 """

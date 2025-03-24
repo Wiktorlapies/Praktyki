@@ -27,9 +27,6 @@ def rachunek(waluta, ilosc, cena):
 
 
 
-
-
-
 print(f"Witaj w kantorze \nDostepne waluty: \n{list(waluty_na_PLN.keys())}")
 waluta = str(input("Jaka walute chcesz zakupic?:")).upper()
 if waluta not in waluty_na_PLN.keys():
