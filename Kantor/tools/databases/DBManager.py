@@ -1,6 +1,5 @@
 
 import pyodbc 
-#from domain.currencies import Currencies
 from tools.databases.DBQuerries import *
 from domain.currencies import *
 DRIVER_NAME = '{ODBC Driver 17 for SQL Server}'
@@ -13,73 +12,66 @@ connection_string = f"""
     DATABASE={DATABASE_NAME};
     Trusted_Connection=yes;
 """
-def connect():
-    with pyodbc.connect(connection_string) as conn:
-        return conn.cursor()
+conn = pyodbc.connect(connection_string)
+cursor = conn.cursor()
 
-def Reset_Database():
-        cursor = connect()
-        cursor.execute(SQL_Drop_Tables)
-        cursor.execute(SQL_Create_Table_Currencies)
-        cursor.execute(SQL_Create_Table_ExchangeRates)
-        cursor.execute(SQL_Create_Table_Resources)
-        cursor.execute(SQL_Create_Table_Transactions)
+def reset_database():
+        with conn:
+            cursor.execute(SQL_Drop_Tables)
+            cursor.execute(SQL_Create_Table_Currencies)
+            cursor.execute(SQL_Create_Table_ExchangeRates)
+            cursor.execute(SQL_Create_Table_Resources)
+            cursor.execute(SQL_Create_Table_Transactions)
 
-def Add_Currencies():
-    with pyodbc.connect(connection_string) as conn:
-        cursor = conn.cursor()
-        for name in Currencies.keys():
+def add_currencies():
+    with conn:
+        for name in currencies.keys():
             cursor.execute(SQL_Rows_in_Currencies, name)
             cursor.execute(SQL_Get_CurrencyID, name)
             ID = cursor.fetchone()
-            cursor.execute(SQL_Rows_in_ExchangeRates, ID[0], Currencies[name][0])
+            cursor.execute(SQL_Rows_in_ExchangeRates, ID[0], currencies[name][0])
             
 
-def Add_Resources():
-    with pyodbc.connect(connection_string) as conn:
-        cursor = conn.cursor()
-        for name in Currencies.keys():
+def add_resources():
+    with conn:
+        for name in currencies.keys():
             cursor.execute(SQL_Get_CurrencyID, name)
             ID = cursor.fetchone()
-            cursor.execute(SQL_Rows_in_Resources, ID[0], Currencies[name][1])
+            cursor.execute(SQL_Rows_in_Resources, ID[0], currencies[name][1])
             
 
 def new_transaction(currency, quantity, cost):
-        cursor = connect()
+    with conn:
         cursor.execute(SQL_Get_CurrencyID, currency)
         ID = cursor.fetchone()[0]
         cursor.execute(SQL_Add_Transaction, ID, quantity, cost)
-        cursor.commit()
+        
 
 def get_currencies():
-    with pyodbc.connect(connection_string) as conn:
-        cursor = conn.cursor()
+    with conn:
         cursor.execute(SQL_Get_Currencies)
         currencies = [name[0] for name in cursor.fetchall()]
     return currencies
 
-def cost_count(currency, quantity):
-    with pyodbc.connect(connection_string) as conn:
-        cursor = conn.cursor()
+def get_exchange_rate(currency):
+    with conn:
         cursor.execute(SQL_Get_ExchangeRate, currency)
-        ExRate = cursor.fetchone()[0]
-    cost = round((quantity * ExRate), 2)
-    return cost
+        exrate = cursor.fetchone()[0]
+    return exrate
 
-def Get_Resource_quantity(currency):
-    with pyodbc.connect(connection_string) as conn:
-        cursor = conn.cursor()
+def get_resource_quantity(currency):
+    with conn:
         cursor.execute(SQL_Get_Resource_Quantity, currency)
         stock = cursor.fetchone()[0]
     return stock
 
-def get_Resources(currency):
-        cursor = connect()
+def get_resources(currency):
+    with conn:
         cursor.execute(SQL_Get_Resource, currency)
         Data = cursor.fetchone()
-        return Data
-        #cursor.execute(SQL_Update_Resources, New_Quantity, ID)
+    return Data
+            
 
-def update_resourcves(curremcy_ID, quantity):
-        cursor = connect()
+def update_resources(curremcy_ID, quantity):
+    with conn:
         cursor.execute(SQL_Update_Resources, quantity, curremcy_ID)

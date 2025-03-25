@@ -1,4 +1,0 @@
-Data transakcji: 2025-03-20 00:45 
-Ilosc zakupionej waluty: 20.00 EUR 
-Cena(PLN): 85.00 
-

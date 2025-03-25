@@ -25,7 +25,7 @@ Where WeightUnitMeasureID = 'pounds' and Weight>5
 
 select  top 1 ProductName as Nazwa, ProductKey as Klucz, Weight as Waga
 from DimProduct
-where WeightUnitMeasureID = 'ounces' and Weight>0
+where WeightUnitMeasureID = 'ounces' and Weight is not null
 order by Weight
 
 --5. Zwróæ iloœæ produktów, które s¹ bia³e
@@ -49,7 +49,14 @@ where ClassName = 'Economy' and ColorName = 'Silver'
 
 --8. SprawdŸ, który element(-y) z tabeli FactInventory jest (s¹) najd³u¿ej w magazynie
 
---select * from FactInventory
+
+select ProductKey
+from FactInventory
+where DaysInStock = (
+	select top 1 DaysInStock 
+	from FactInventory
+	Order by DaysInStock DESC 
+	)
 
 select top 1 with ties  ProductKey
 from FactInventory
@@ -69,8 +76,11 @@ SafetyStockQuantity as 'W magazynie'
 from FactInventory
 order by UnitCost DESC
 
---11.SprawdŸ czy wszystkich dostêpnych produktów jest wiêcej ni¿ 100
+--11.SprawdŸ ile jest prduktów dostêpnych wiêcej ni¿ 100 sztuk w sumie
 
+select count(*)
+from FactInventory
+where OnHandQuantity + OnOrderQuantity + SafetyStockQuantity > 100
 
 
 
@@ -79,6 +89,7 @@ order by UnitCost DESC
 select COUNT(PromotionName) as 'Promocje Ameryka'
 from DimPromotion
 where PromotionName like '%America%'
+
 
 --13.Zwróæ nazwy 3 najwiêkszych promocji
 
