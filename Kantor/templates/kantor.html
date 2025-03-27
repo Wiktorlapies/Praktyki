@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{title}}</title>
+    </head>
+    <body>
+        <h2>{{title}}</h2>
+        <p style="color: red;">{{error}}</p>
+        <form action="/" method="post">
+            <p>
+                <label for="budget">Podaj budżet jakim dysponujesz(PLN):</label>
+                <input type="text" name="budget" id="budget" placeholder="Twój budżet" required>
+            </p>
+
+            <p>
+                <label for="currency">Wybierz walutę, którą chcesz zakupić:</label>
+                <select name="currency" id="currency" required>
+                    {% for name in data %}
+                        <option value="{{name}}"">{{name}}</option>
+                    {% endfor %}
+                </select>
+            </p>
+            
+            <p>
+                <label for="quantity">Podaj ile chcesz zakupić tej waluty:</label>
+                <input type="text" name="quantity" id="quantity" placeholder="Ilość" required>
+            </p>
+
+            <p>
+                <input type="submit" value="Kup">
+            </p>
+        </form>
+        <p>
+            Do zapłacenia: {{cost}} PLN
+        </p>
+    </body>
+</html>
